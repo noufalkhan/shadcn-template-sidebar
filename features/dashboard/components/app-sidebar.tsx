@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { appConfig } from "@/config/app"
 import { getSidebarNavItems } from "@/config/nav/resolver"
 import { isNavItemActive } from "@/lib/navigation"
 import {
@@ -25,7 +26,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div className="px-2 py-1 text-sm font-semibold">Ospyn Sign Legal</div>
+        <div className="px-2 py-1 text-sm font-semibold">{appConfig.productName}</div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

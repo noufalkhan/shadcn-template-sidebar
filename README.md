@@ -38,7 +38,20 @@ features/
       app-sidebar.tsx
       dashboard-navbar.tsx
       documents-dashboard-content.tsx
+  showcase/
+    components/
+      ui-showcase-page.tsx     # full component catalog for internal reference
 ```
+
+## App Branding Defaults
+
+Project-level display text lives in `config/app.ts`:
+
+- `name` for docs/title context
+- `productName` for shared shell branding
+- `primaryCtaLabel` for the main header CTA
+
+Update these values once per project to rebrand the template quickly.
 
 ## Golden Rules
 
@@ -54,7 +67,10 @@ features/
 
 - With-header (main app): `/dashboard`
 - With-header (demo): `/header-demo`
+- UI Showcase (reference route): `/ui-showcase`
 - Minimal: `/minimal-demo`
+
+`/ui-showcase` is intentionally kept as a separate reference route and excluded from primary app nav, so dashboard/navigation stay business-focused.
 
 ## Create a New Page
 
@@ -66,11 +82,10 @@ features/
 Example:
 
 ```tsx
-import { DocumentsDashboardContent } from "@/features/dashboard/components/documents-dashboard-content"
-import { documentRows, metrics } from "@/features/dashboard/data"
+import { SectionPage } from "@/features/dashboard/components/section-page"
 
-export default function DashboardPage() {
-  return <DocumentsDashboardContent metrics={metrics} rows={documentRows} />
+export default function BillingPage() {
+  return <SectionPage title="Billing" description="Manage billing and invoices." />
 }
 ```
 

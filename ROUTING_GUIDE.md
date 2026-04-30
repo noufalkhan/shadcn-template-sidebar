@@ -65,3 +65,25 @@ Navigation config lives in `config/nav/`:
 
 Use `navMode = "separate"` by default to avoid cross-shell route conflicts.
 Switch to `navMode = "shared"` when both shells should use identical routes.
+
+## UI Showcase Route
+
+The component reference gallery lives at `/ui-showcase` (implemented in `features/showcase/...`).
+
+- Keep this route separate from business pages.
+- Avoid adding it to primary product nav by default.
+- Use it as an internal developer reference during implementation.
+
+## Troubleshooting
+
+If you rename route groups (for example `(topbar)` -> `(with-header)`), clear Next.js cache once so generated validators are refreshed:
+
+```bash
+# macOS/Linux
+rm -rf .next
+
+# Windows PowerShell
+Remove-Item -Recurse -Force .next
+
+pnpm dev
+```

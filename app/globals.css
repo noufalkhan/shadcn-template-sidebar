@@ -54,7 +54,7 @@
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
+    --primary: oklch(0.62 0.17 152);
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
@@ -65,7 +65,7 @@
     --destructive: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --ring: oklch(0.65 0.15 152);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -74,17 +74,17 @@
     --radius: 0.625rem;
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary: oklch(0.62 0.17 152);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.97 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
-    --primary-button-from: #1f2937;
-    --primary-button-to: #111827;
-    --primary-button-from-hover: #111827;
-    --primary-button-to-hover: #030712;
-    --primary-button-ring: rgb(17 24 39 / 45%);
+    --primary-button-from: #10b981;
+    --primary-button-to: #059669;
+    --primary-button-from-hover: #22c55e;
+    --primary-button-to-hover: #047857;
+    --primary-button-ring: rgb(16 185 129 / 45%);
 }
 
 :root[data-radius="compact"] {
@@ -125,8 +125,8 @@
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
+    --primary: oklch(0.74 0.15 152);
+    --primary-foreground: oklch(0.18 0.02 152);
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
     --muted: oklch(0.269 0 0);
@@ -136,7 +136,7 @@
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
+    --ring: oklch(0.66 0.12 152);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -144,17 +144,17 @@
     --chart-5: oklch(0.269 0 0);
     --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary: oklch(0.74 0.15 152);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.269 0 0);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
-    --primary-button-from: #e5e7eb;
-    --primary-button-to: #cbd5e1;
-    --primary-button-from-hover: #f3f4f6;
-    --primary-button-to-hover: #d1d5db;
-    --primary-button-ring: rgb(229 231 235 / 45%);
+    --primary-button-from: #6ee7b7;
+    --primary-button-to: #34d399;
+    --primary-button-from-hover: #a7f3d0;
+    --primary-button-to-hover: #6ee7b7;
+    --primary-button-ring: rgb(52 211 153 / 45%);
 }
 
 :root[data-accent="slate"] {
