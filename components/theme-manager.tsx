@@ -72,6 +72,11 @@ function readStoredValue<T extends string>(key: string, allowed: readonly T[], f
   return fallback
 }
 
+function persistPreference(key: string, value: string) {
+  window.localStorage.setItem(key, value)
+  document.cookie = `${key}=${value}; Path=/; Max-Age=31536000; SameSite=Lax`
+}
+
 function applyAccent(accent: Accent) {
   document.documentElement.dataset.accent = accent
 }
@@ -90,70 +95,51 @@ function applyScale(scale: Scale) {
 
 export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
   const { theme, setTheme, resolvedTheme } = useTheme()
-  const [accent, setAccent] = React.useState<Accent>("emerald")
-  const [radius, setRadius] = React.useState<Radius>("default")
-  const [motion, setMotion] = React.useState<Motion>("default")
-  const [scale, setScale] = React.useState<Scale>("md")
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    const storedAccent = readStoredValue<Accent>(
-      STORAGE_KEYS.accent,
-      ACCENT_OPTIONS.map((item) => item.id),
-      "emerald"
-    )
-    const storedRadius = readStoredValue<Radius>(
-      STORAGE_KEYS.radius,
-      RADIUS_OPTIONS.map((item) => item.id),
-      "default"
-    )
-    const storedMotion = readStoredValue<Motion>(STORAGE_KEYS.motion, ["default", "reduced"], "default")
-    const storedScale = readStoredValue<Scale>(STORAGE_KEYS.scale, SCALE_OPTIONS.map((item) => item.id), "md")
-    setAccent(storedAccent)
-    setRadius(storedRadius)
-    setMotion(storedMotion)
-    setScale(storedScale)
-    applyAccent(storedAccent)
-    applyRadius(storedRadius)
-    applyMotion(storedMotion)
-    applyScale(storedScale)
-    if (!window.localStorage.getItem(STORAGE_KEYS.accent)) {
-      window.localStorage.setItem(STORAGE_KEYS.accent, storedAccent)
-    }
-    if (!window.localStorage.getItem(STORAGE_KEYS.radius)) {
-      window.localStorage.setItem(STORAGE_KEYS.radius, storedRadius)
-    }
-    if (!window.localStorage.getItem(STORAGE_KEYS.motion)) {
-      window.localStorage.setItem(STORAGE_KEYS.motion, storedMotion)
-    }
-    if (!window.localStorage.getItem(STORAGE_KEYS.scale)) {
-      window.localStorage.setItem(STORAGE_KEYS.scale, storedScale)
-    }
-    setMounted(true)
-  }, [])
+  const [accent, setAccent] = React.useState<Accent>(() =>
+    readStoredValue<Accent>(STORAGE_KEYS.accent, ACCENT_OPTIONS.map((item) => item.id), "emerald")
+  )
+  const [radius, setRadius] = React.useState<Radius>(() =>
+    readStoredValue<Radius>(STORAGE_KEYS.radius, RADIUS_OPTIONS.map((item) => item.id), "default")
+  )
+  const [motion, setMotion] = React.useState<Motion>(() =>
+    readStoredValue<Motion>(STORAGE_KEYS.motion, ["default", "reduced"], "default")
+  )
+  const [scale, setScale] = React.useState<Scale>(() =>
+    readStoredValue<Scale>(STORAGE_KEYS.scale, SCALE_OPTIONS.map((item) => item.id), "md")
+  )
+  React.useLayoutEffect(() => {
+    applyAccent(accent)
+    applyRadius(radius)
+    applyMotion(motion)
+    applyScale(scale)
+    persistPreference(STORAGE_KEYS.accent, accent)
+    persistPreference(STORAGE_KEYS.radius, radius)
+    persistPreference(STORAGE_KEYS.motion, motion)
+    persistPreference(STORAGE_KEYS.scale, scale)
+  }, [accent, motion, radius, scale])
 
   function onAccentChange(nextAccent: Accent) {
     setAccent(nextAccent)
     applyAccent(nextAccent)
-    window.localStorage.setItem(STORAGE_KEYS.accent, nextAccent)
+    persistPreference(STORAGE_KEYS.accent, nextAccent)
   }
 
   function onRadiusChange(nextRadius: Radius) {
     setRadius(nextRadius)
     applyRadius(nextRadius)
-    window.localStorage.setItem(STORAGE_KEYS.radius, nextRadius)
+    persistPreference(STORAGE_KEYS.radius, nextRadius)
   }
 
   function onMotionChange(nextMotion: Motion) {
     setMotion(nextMotion)
     applyMotion(nextMotion)
-    window.localStorage.setItem(STORAGE_KEYS.motion, nextMotion)
+    persistPreference(STORAGE_KEYS.motion, nextMotion)
   }
 
   function onScaleChange(nextScale: Scale) {
     setScale(nextScale)
     applyScale(nextScale)
-    window.localStorage.setItem(STORAGE_KEYS.scale, nextScale)
+    persistPreference(STORAGE_KEYS.scale, nextScale)
   }
 
   function resetThemePreferences() {
@@ -164,7 +150,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
     setTheme("system")
   }
 
-  const activeTheme = (mounted ? theme : "system") as ThemeMode
+  const activeTheme = (theme ?? "system") as ThemeMode
   const resolvedLabel = resolvedTheme ?? "system"
 
   return (

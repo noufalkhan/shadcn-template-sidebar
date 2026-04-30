@@ -2,12 +2,21 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { appConfig } from "@/config/app"
 import { getHeaderNavItems } from "@/config/nav/resolver"
 import { isNavItemActive } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 import { ThemeManager } from "@/components/theme-manager"
-import { Bell, Cog, User } from "lucide-react"
+import { Bell, Cog, Menu, User } from "lucide-react"
 
 type DashboardNavbarProps = {
   showSidebarTrigger?: boolean
@@ -23,8 +32,42 @@ export function DashboardNavbar({
     <header className="flex h-16 shrink-0 items-center border-b bg-background px-6">
       {showSidebarTrigger ? <SidebarTrigger className="mr-3" /> : null}
 
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="mr-2 md:hidden"
+            aria-label="Open navigation menu"
+          >
+            <Menu className="size-4" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-72 sm:max-w-72">
+          <SheetHeader className="border-b">
+            <SheetTitle>Navigation</SheetTitle>
+          </SheetHeader>
+          <nav className="flex flex-col p-2">
+            {navItems.map((item) => (
+              <SheetClose asChild key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    isNavItemActive(pathname, item.href)
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </SheetClose>
+            ))}
+          </nav>
+        </SheetContent>
+      </Sheet>
+
       <div className="w-48">
-        <p className="text-lg font-semibold tracking-tight">Ospyn Sign Legal</p>
+        <p className="text-lg font-semibold tracking-tight">{appConfig.productName}</p>
       </div>
 
       <nav className="hidden flex-1 items-center justify-center gap-1 text-[13px] font-medium text-muted-foreground md:flex">
@@ -45,7 +88,7 @@ export function DashboardNavbar({
 
       <div className="ml-auto flex items-center gap-1">
         <Button size="lg" className="primary-button mr-1 rounded-full">
-          Upload your Document
+          {appConfig.primaryCtaLabel}
         </Button>
         <Button variant="ghost" size="icon-sm" className="text-muted-foreground">
           <Bell className="size-4" />
