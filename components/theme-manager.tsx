@@ -107,7 +107,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
   const [scale, setScale] = React.useState<Scale>(() =>
     readStoredValue<Scale>(STORAGE_KEYS.scale, SCALE_OPTIONS.map((item) => item.id), "md")
   )
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     applyAccent(accent)
     applyRadius(radius)
     applyMotion(motion)
@@ -120,26 +120,18 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
 
   function onAccentChange(nextAccent: Accent) {
     setAccent(nextAccent)
-    applyAccent(nextAccent)
-    persistPreference(STORAGE_KEYS.accent, nextAccent)
   }
 
   function onRadiusChange(nextRadius: Radius) {
     setRadius(nextRadius)
-    applyRadius(nextRadius)
-    persistPreference(STORAGE_KEYS.radius, nextRadius)
   }
 
   function onMotionChange(nextMotion: Motion) {
     setMotion(nextMotion)
-    applyMotion(nextMotion)
-    persistPreference(STORAGE_KEYS.motion, nextMotion)
   }
 
   function onScaleChange(nextScale: Scale) {
     setScale(nextScale)
-    applyScale(nextScale)
-    persistPreference(STORAGE_KEYS.scale, nextScale)
   }
 
   function resetThemePreferences() {

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { appConfig } from "@/config/app"
 import { getHeaderNavItems } from "@/config/nav/resolver"
 import { isNavItemActive } from "@/lib/navigation"
@@ -26,6 +26,7 @@ export function DashboardNavbar({
   showSidebarTrigger = true,
 }: DashboardNavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const navItems = getHeaderNavItems()
 
   return (
@@ -52,6 +53,9 @@ export function DashboardNavbar({
               <SheetClose asChild key={item.href}>
                 <Link
                   href={item.href}
+                  prefetch
+                  onMouseEnter={() => router.prefetch(item.href)}
+                  onFocus={() => router.prefetch(item.href)}
                   className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                     isNavItemActive(pathname, item.href)
                       ? "bg-accent text-accent-foreground"
@@ -75,6 +79,9 @@ export function DashboardNavbar({
           <Link
             key={item.href}
             href={item.href}
+            prefetch
+            onMouseEnter={() => router.prefetch(item.href)}
+            onFocus={() => router.prefetch(item.href)}
             className={`cursor-pointer px-3 py-4 transition-colors hover:text-foreground ${
               isNavItemActive(pathname, item.href)
                 ? "border-b-2 border-foreground text-foreground"

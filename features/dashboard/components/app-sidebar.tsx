@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { appConfig } from "@/config/app"
 import { getSidebarNavItems } from "@/config/nav/resolver"
 import { isNavItemActive } from "@/lib/navigation"
@@ -21,6 +21,7 @@ import {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
+  const router = useRouter()
   const navItems = getSidebarNavItems()
 
   return (
@@ -36,7 +37,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild isActive={isNavItemActive(pathname, item.href)}>
-                    <Link href={item.href}>{item.label}</Link>
+                    <Link
+                      href={item.href}
+                      prefetch
+                      onMouseEnter={() => router.prefetch(item.href)}
+                      onFocus={() => router.prefetch(item.href)}
+                    >
+                      {item.label}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
