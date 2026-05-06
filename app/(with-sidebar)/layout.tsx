@@ -11,6 +11,7 @@ export default function WithSidebarLayoutGroup({
     <SidebarHeaderLayout
       sidebar={<AppSidebar />}
       header={<SidebarSectionNavbar />}
+      defaultOpen
       contentClassName="flex-1 overflow-y-auto bg-muted/30 p-6"
     >
       {children}

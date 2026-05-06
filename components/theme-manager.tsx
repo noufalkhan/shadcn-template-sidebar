@@ -25,7 +25,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
-type ThemeMode = "light" | "dark" | "system"
+type ThemeMode = "light" | "dark" | "semi-dark" | "system"
 type Accent = "slate" | "emerald" | "blue" | "violet" | "rose" | "amber"
 type Radius = "default" | "comfortable" | "compact"
 type Motion = "default" | "reduced"
@@ -143,7 +143,12 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
   }
 
   const activeTheme = (theme ?? "system") as ThemeMode
-  const resolvedLabel = resolvedTheme ?? "system"
+  const currentModeLabel =
+    activeTheme === "semi-dark"
+      ? "semi dark"
+      : activeTheme === "system"
+        ? resolvedTheme ?? "system"
+        : activeTheme
 
   return (
     <Sheet>
@@ -163,7 +168,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
           <div className="grid grid-cols-2 gap-2 rounded-lg border bg-card p-3">
             <div>
               <p className="text-xs text-muted-foreground">Current mode</p>
-              <p className="font-medium capitalize">{resolvedLabel}</p>
+              <p className="font-medium capitalize">{currentModeLabel}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Active accent</p>
@@ -173,7 +178,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
 
           <section className="space-y-2">
             <h3 className="text-sm font-semibold">Appearance mode</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button
                 variant={activeTheme === "light" ? "default" : "outline"}
                 size="sm"
@@ -197,6 +202,14 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
               >
                 <Monitor className="size-4" />
                 System
+              </Button>
+              <Button
+                variant={activeTheme === "semi-dark" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setTheme("semi-dark")}
+              >
+                <Moon className="size-4" />
+                Semi dark
               </Button>
             </div>
           </section>

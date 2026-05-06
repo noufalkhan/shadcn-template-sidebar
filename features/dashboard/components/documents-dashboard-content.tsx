@@ -6,7 +6,7 @@ export function DocumentsDashboardContent() {
     <div className="mx-auto w-full max-w-6xl space-y-5">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-[13px] text-muted-foreground">
+        <p className="mt-1 text-sm text-muted-foreground">
           Starter landing page for your product modules. Keep this page focused on real app entry
           points and business context.
         </p>

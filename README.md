@@ -102,3 +102,7 @@ pnpm build
 ## More Routing Details
 
 See `ROUTING_GUIDE.md` for layout selection rules, naming conventions, and the recommended minimal -> with-header app flow.
+
+## Typography Consistency
+
+Use `TYPOGRAPHY_GUIDE.md` as the source of truth for text size choices (sidebar, header, titles, descriptions, and body text).

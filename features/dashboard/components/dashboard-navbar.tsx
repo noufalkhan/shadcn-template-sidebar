@@ -71,10 +71,10 @@ export function DashboardNavbar({
       </Sheet>
 
       <div className="w-48">
-        <p className="text-lg font-semibold tracking-tight">{appConfig.productName}</p>
+        <p className="text-base font-semibold tracking-tight">{appConfig.productName}</p>
       </div>
 
-      <nav className="hidden flex-1 items-center justify-center gap-1 text-[13px] font-medium text-muted-foreground md:flex">
+      <nav className="hidden flex-1 items-center justify-center gap-1 text-sm font-medium text-muted-foreground md:flex">
         {navItems.map((item) => (
           <Link
             key={item.href}
