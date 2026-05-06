@@ -1,31 +1,21 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Bell, ChevronDown, Cog, Search, Upload } from "lucide-react"
 
+import { getSidebarNavItems } from "@/config/nav/resolver"
 import { ThemeManager } from "@/components/theme-manager"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { isNavItemActive } from "@/lib/navigation"
 
 type Crumb = { label: string; href?: string }
 
 const ROUTE_CRUMBS: Record<string, Crumb[]> = {
-  "/sample-sidebar": [
-    { label: "Documents", href: "/sample-sidebar/documents" },
-    { label: "My Requests" },
-  ],
+  "/sample-sidebar": [{ label: "Dashboard" }],
   "/sample-sidebar/documents": [{ label: "Documents" }],
   "/sample-sidebar/templates": [{ label: "Templates" }],
   "/sample-sidebar/archive": [{ label: "Archive" }],
@@ -37,22 +27,26 @@ function getCrumbsFor(pathname: string): Crumb[] {
 
 export function DocumentsAppHeader() {
   const pathname = usePathname()
+  const navItems = getSidebarNavItems()
+  const activeSidebarItem = navItems.find((item) => isNavItemActive(pathname, item.href))
   const crumbs = getCrumbsFor(pathname)
-  const breadcrumbText = crumbs.map((crumb) => crumb.label).join(" / ")
+  const pageTitle = activeSidebarItem?.label ?? crumbs[crumbs.length - 1]?.label ?? "Dashboard"
+  const breadcrumbText = pageTitle
 
   return (
     <header className="border-b bg-background">
       <div className="mx-auto w-full max-w-[1400px] px-6 md:px-8">
-        <div className="flex h-14 items-center gap-2 xl:hidden">
+        <div className="flex h-14 items-center gap-2 md:hidden">
           <SidebarTrigger className="shrink-0" />
           <p className="min-w-0 truncate text-sm font-medium text-foreground">{breadcrumbText}</p>
           <div className="ml-auto flex items-center gap-1.5">
             <Button
-              size="icon-sm"
+              size="sm"
               className="primary-button rounded-full"
               aria-label="Upload your Document"
             >
               <Upload className="size-4" />
+              Upload your Document
             </Button>
             <Button
               variant="ghost"
@@ -87,7 +81,7 @@ export function DocumentsAppHeader() {
           </div>
         </div>
 
-        <div className="relative pb-3 xl:hidden">
+        <div className="relative pb-3 md:hidden">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
@@ -96,34 +90,10 @@ export function DocumentsAppHeader() {
           />
         </div>
 
-        <div className="hidden h-16 grid-cols-[1fr_minmax(320px,480px)_1fr] items-center gap-4 xl:grid">
+        <div className="hidden h-16 grid-cols-[minmax(0,1fr)_minmax(220px,320px)_auto] items-center gap-3 md:grid lg:grid-cols-[minmax(0,1fr)_minmax(260px,380px)_auto] xl:grid-cols-[1fr_minmax(320px,480px)_auto]">
           <div className="flex min-w-0 items-center gap-3">
             <SidebarTrigger className="shrink-0" />
-            <Breadcrumb className="min-w-0">
-              <BreadcrumbList className="flex-nowrap overflow-hidden text-sm whitespace-nowrap">
-                {crumbs.map((crumb, idx) => {
-                  const isLast = idx === crumbs.length - 1
-                  return (
-                    <React.Fragment key={`${crumb.label}-${idx}`}>
-                      <BreadcrumbItem className="min-w-0">
-                        {isLast || !crumb.href ? (
-                          <BreadcrumbPage className="truncate font-medium text-foreground">
-                            {crumb.label}
-                          </BreadcrumbPage>
-                        ) : (
-                          <BreadcrumbLink asChild>
-                            <Link href={crumb.href} className="truncate text-muted-foreground">
-                              {crumb.label}
-                            </Link>
-                          </BreadcrumbLink>
-                        )}
-                      </BreadcrumbItem>
-                      {!isLast ? <BreadcrumbSeparator /> : null}
-                    </React.Fragment>
-                  )
-                })}
-              </BreadcrumbList>
-            </Breadcrumb>
+            <p className="min-w-0 truncate text-sm font-medium text-foreground">{pageTitle}</p>
           </div>
 
           <div className="relative w-full">
@@ -135,10 +105,17 @@ export function DocumentsAppHeader() {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-2">
-            <Button size="lg" className="primary-button rounded-full">
-            <Upload className="size-4" data-icon="inline-start" />
-            Upload your Document
+          <div className="flex items-center justify-end gap-1.5 pl-2 lg:gap-2 lg:pl-3">
+            <Button
+              size="icon-sm"
+              className="primary-button rounded-full xl:hidden"
+              aria-label="Upload your Document"
+            >
+              <Upload className="size-4" />
+            </Button>
+            <Button size="lg" className="primary-button hidden rounded-full xl:inline-flex">
+              <Upload className="size-4" data-icon="inline-start" />
+              Upload your Document
             </Button>
 
             <Button
@@ -165,17 +142,18 @@ export function DocumentsAppHeader() {
 
             <button
               type="button"
-              className="ml-1 flex items-center gap-2 rounded-full border border-transparent px-1.5 py-1 text-left transition-colors hover:bg-muted/50"
+              className="ml-1 flex items-center rounded-full border border-transparent p-1 text-left transition-colors hover:bg-muted/50 lg:px-1.5 lg:py-1"
+              aria-label="Account menu"
             >
               <Avatar size="sm">
                 <AvatarImage src="" alt="User avatar" />
                 <AvatarFallback>AM</AvatarFallback>
               </Avatar>
-              <div className="text-xs leading-tight">
+              <div className="hidden text-xs leading-tight xl:block">
                 <p className="font-medium text-foreground">Aarav Mehta</p>
                 <p className="text-muted-foreground">aaravmehta.1990@gmail.com</p>
               </div>
-              <ChevronDown className="size-3.5 text-muted-foreground" />
+              <ChevronDown className="ml-1 hidden size-3.5 text-muted-foreground xl:block" />
             </button>
           </div>
         </div>

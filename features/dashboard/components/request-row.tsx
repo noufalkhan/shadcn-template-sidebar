@@ -90,11 +90,11 @@ export function RequestRow({ request }: RequestRowProps) {
               <Avatar
                 key={`${signer.name}-${signer.initials}-${idx}`}
                 size="sm"
-                className="ring-2 ring-background"
+                className="ring-6 ring-background"
               >
                 <AvatarFallback
                   className={cn(
-                    "text-[10px] font-semibold",
+                    "text-[6px] font-medium",
                     SIGNER_TINTS[idx % SIGNER_TINTS.length]
                   )}
                 >
@@ -160,11 +160,34 @@ export function RequestRow({ request }: RequestRowProps) {
               <MoreVertical className="size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Download</DropdownMenuItem>
-            <DropdownMenuItem>Share</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">Cancel</DropdownMenuItem>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 min-w-56 rounded-md border border-border/80 bg-background p-2 shadow-lg"
+          >
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              Download
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              Audit trail
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              Send Reminder
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              View Timeline
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-sm px-4 py-2.5 text-sm font-medium text-slate-600 focus:text-slate-700">
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              className="rounded-sm px-4 py-2.5 text-sm font-medium"
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </td>

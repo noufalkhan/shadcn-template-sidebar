@@ -25,7 +25,7 @@ type DashboardKpiCardsProps = {
 
 export function DashboardKpiCards({ stats }: DashboardKpiCardsProps) {
   return (
-    <div className="grid h-full min-h-[204px] grid-cols-2 overflow-hidden rounded-lg bg-background">
+    <div className="grid h-full min-h-[204px] p-2 grid-cols-2 overflow-hidden rounded-lg bg-background">
       {stats.map((stat, idx) => {
         const Icon = STAT_ICONS[stat.id]
         const isPositive = stat.delta >= 0

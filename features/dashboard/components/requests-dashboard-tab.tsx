@@ -4,7 +4,7 @@ import { ActivityChart } from "@/features/dashboard/components/activity-chart"
 import { BuyEstampCta } from "@/features/dashboard/components/buy-estamp-cta"
 import { CreditUsageChart } from "@/features/dashboard/components/credit-usage-chart"
 import { DashboardKpiCards } from "@/features/dashboard/components/dashboard-kpi-cards"
-import { RequestsTable } from "@/features/dashboard/components/requests-table"
+import { NeoTable } from "@/features/dashboard/components/neo-table"
 import { useDashboardStats } from "@/features/dashboard/hooks/use-dashboard-stats"
 
 export function RequestsDashboardTab() {
@@ -27,7 +27,7 @@ export function RequestsDashboardTab() {
         </div>
       </div>
 
-      <RequestsTable />
+      <NeoTable />
     </>
   )
 }

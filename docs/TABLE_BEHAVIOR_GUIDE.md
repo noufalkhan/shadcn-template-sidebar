@@ -3,14 +3,14 @@
 This project uses two table patterns:
 
 1. Base reusable table primitives from `components/ui/table.tsx`
-2. Feature-specific request table UI in `features/dashboard/components/requests-table.tsx`
+2. Feature-specific request table UI in `features/dashboard/components/neo-table.tsx`
 
 Use this guide to choose the right one and keep implementation consistent.
 
 ## Quick Decision Rule
 
 - Use `components/ui/table.tsx` when you need a normal, reusable data table.
-- Use `features/dashboard/components/requests-table.tsx` when you need the custom "request row" design (badges, avatars, stamp amount block, status timeline, inline action menu, inset vertical separators).
+- Use `features/dashboard/components/neo-table.tsx` when you need the custom "request row" design (badges, avatars, stamp amount block, status timeline, inline action menu, inset vertical separators).
 
 ## 1) Base Table (Reusable Primitive)
 
@@ -78,7 +78,7 @@ export function UsersTable({ rows }: { rows: { id: string; name: string; status:
 }
 ```
 
-## 2) Requests Table (Feature-Specific Composite)
+## 2) Neo Table (Feature-Specific Composite)
 
 ### Purpose
 
@@ -86,7 +86,7 @@ A rich dashboard table for request tracking UI, tailored to the request domain.
 
 ### Sources
 
-- `features/dashboard/components/requests-table.tsx`
+- `features/dashboard/components/neo-table.tsx`
 - `features/dashboard/components/request-row.tsx`
 - `features/dashboard/components/requests-filters.tsx`
 
@@ -111,10 +111,10 @@ A rich dashboard table for request tracking UI, tailored to the request domain.
 ### Usage
 
 ```tsx
-import { RequestsTable } from "@/features/dashboard/components/requests-table"
+import { NeoTable } from "@/features/dashboard/components/neo-table"
 
 export function RequestsDashboardTab() {
-  return <RequestsTable />
+  return <NeoTable />
 }
 ```
 

@@ -3,20 +3,31 @@
 import * as React from "react"
 
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useRequests } from "@/features/dashboard/hooks/use-requests"
 import { RequestRow } from "@/features/dashboard/components/request-row"
 import { RequestSort, RequestsFilters } from "@/features/dashboard/components/requests-filters"
+import { useRequests } from "@/features/dashboard/hooks/use-requests"
 
-export function RequestsTable() {
+const ROWS_PER_PAGE = 8
+
+export function NeoTable() {
   const { data: requests } = useRequests()
   const [search, setSearch] = React.useState("")
   const [sort, setSort] = React.useState<RequestSort>("newest")
+  const [page, setPage] = React.useState(1)
 
   const filtered = React.useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -41,6 +52,24 @@ export function RequestsTable() {
         return sorted
     }
   }, [requests, search, sort])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ROWS_PER_PAGE))
+
+  React.useEffect(() => {
+    setPage(1)
+  }, [search, sort])
+
+  React.useEffect(() => {
+    setPage((currentPage) => Math.min(currentPage, totalPages))
+  }, [totalPages])
+
+  const paginatedRequests = React.useMemo(() => {
+    const startIndex = (page - 1) * ROWS_PER_PAGE
+    return filtered.slice(startIndex, startIndex + ROWS_PER_PAGE)
+  }, [filtered, page])
+
+  const pageStart = filtered.length === 0 ? 0 : (page - 1) * ROWS_PER_PAGE + 1
+  const pageEnd = Math.min(page * ROWS_PER_PAGE, filtered.length)
 
   return (
     <section className="space-y-4">
@@ -82,7 +111,7 @@ export function RequestsTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((request) => (
+              {paginatedRequests.map((request) => (
                 <TableRow key={request.id} className="hover:bg-muted/20">
                   <RequestRow request={request} />
                 </TableRow>
@@ -90,6 +119,55 @@ export function RequestsTable() {
             </TableBody>
           </Table>
         )}
+        {filtered.length > 0 ? (
+          <div className="border-t px-3 py-3 sm:px-4">
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+              <p className="text-xs text-muted-foreground">
+                Showing {pageStart}-{pageEnd} of {filtered.length} requests
+              </p>
+              <Pagination className="mx-0 w-auto justify-end">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setPage((currentPage) => Math.max(currentPage - 1, 1))
+                      }}
+                      aria-disabled={page === 1}
+                      className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                    <PaginationItem key={pageNumber}>
+                      <PaginationLink
+                        href="#"
+                        isActive={pageNumber === page}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          setPage(pageNumber)
+                        }}
+                      >
+                        {pageNumber}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        setPage((currentPage) => Math.min(currentPage + 1, totalPages))
+                      }}
+                      aria-disabled={page === totalPages}
+                      className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   )
