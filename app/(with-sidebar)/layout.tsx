@@ -12,7 +12,7 @@ export default function WithSidebarLayoutGroup({
       sidebar={<AppSidebar />}
       header={<DocumentsAppHeader />}
       defaultOpen
-      contentClassName="flex-1 overflow-y-auto bg-muted/30 p-6"
+      contentClassName="flex-1 overflow-y-auto bg-muted/30 p-2 md:p-6"
     >
       {children}
     </SidebarHeaderLayout>

@@ -38,13 +38,13 @@ const STORAGE_KEYS = {
   scale: "app-scale",
 } as const
 
-const ACCENT_OPTIONS: Array<{ id: Accent; label: string; previewClass: string }> = [
-  { id: "slate", label: "Slate", previewClass: "bg-slate-500" },
-  { id: "emerald", label: "Emerald", previewClass: "bg-emerald-500" },
-  { id: "blue", label: "Blue", previewClass: "bg-blue-500" },
-  { id: "violet", label: "Violet", previewClass: "bg-violet-500" },
-  { id: "rose", label: "Rose", previewClass: "bg-rose-500" },
-  { id: "amber", label: "Amber", previewClass: "bg-amber-500" },
+const ACCENT_OPTIONS: Array<{ id: Accent; previewClass: string; glowClass: string }> = [
+  { id: "slate", previewClass: "bg-slate-500", glowClass: "shadow-slate-500/50" },
+  { id: "emerald", previewClass: "bg-emerald-500", glowClass: "shadow-emerald-500/50" },
+  { id: "blue", previewClass: "bg-blue-500", glowClass: "shadow-blue-500/50" },
+  { id: "violet", previewClass: "bg-violet-500", glowClass: "shadow-violet-500/50" },
+  { id: "rose", previewClass: "bg-rose-500", glowClass: "shadow-rose-500/50" },
+  { id: "amber", previewClass: "bg-amber-500", glowClass: "shadow-amber-500/50" },
 ]
 
 const RADIUS_OPTIONS: Array<{ id: Radius; label: string }> = [
@@ -164,24 +164,25 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex-1 space-y-5 px-4 pb-4">
-          <div className="grid grid-cols-2 gap-2 rounded-lg border bg-card p-3">
-            <div>
+        <div className="flex-1 space-y-4 px-4 pb-4 pt-3">
+          <div className="grid grid-cols-2 gap-3 rounded-xl border bg-linear-to-b from-card to-card/40 p-4 shadow-sm">
+            <div className="rounded-lg bg-background/70 p-3">
               <p className="text-xs text-muted-foreground">Current mode</p>
               <p className="font-medium capitalize">{currentModeLabel}</p>
             </div>
-            <div>
+            <div className="rounded-lg bg-background/70 p-3">
               <p className="text-xs text-muted-foreground">Active accent</p>
               <p className="font-medium capitalize">{accent}</p>
             </div>
           </div>
 
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold">Appearance mode</h3>
+          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+            <h3 className="text-sm font-semibold tracking-tight">Appearance mode</h3>
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant={activeTheme === "light" ? "default" : "outline"}
                 size="sm"
+                className="justify-start"
                 onClick={() => setTheme("light")}
               >
                 <Sun className="size-4" />
@@ -190,6 +191,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
               <Button
                 variant={activeTheme === "dark" ? "default" : "outline"}
                 size="sm"
+                className="justify-start"
                 onClick={() => setTheme("dark")}
               >
                 <Moon className="size-4" />
@@ -198,6 +200,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
               <Button
                 variant={activeTheme === "system" ? "default" : "outline"}
                 size="sm"
+                className="justify-start"
                 onClick={() => setTheme("system")}
               >
                 <Monitor className="size-4" />
@@ -206,6 +209,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
               <Button
                 variant={activeTheme === "semi-dark" ? "default" : "outline"}
                 size="sm"
+                className="justify-start"
                 onClick={() => setTheme("semi-dark")}
               >
                 <Moon className="size-4" />
@@ -214,32 +218,41 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
             </div>
           </section>
 
-          <Separator />
-
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold">Accent palette</h3>
-            <div className="grid grid-cols-3 gap-2">
+          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+            <h3 className="text-sm font-semibold tracking-tight">Accent palette</h3>
+            <div className="grid grid-cols-6 gap-3">
               {ACCENT_OPTIONS.map((option) => (
-                <Button
+                <button
                   key={option.id}
                   type="button"
-                  variant={accent === option.id ? "default" : "outline"}
-                  size="sm"
-                  className="justify-start"
+                  aria-label={`Use ${option.id} accent`}
+                  className={cn(
+                    "relative flex size-11 items-center justify-center rounded-full border bg-background transition-all hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                    accent === option.id
+                      ? "border-foreground/20 shadow-md ring-2 ring-ring ring-offset-2"
+                      : "border-border"
+                  )}
                   onClick={() => onAccentChange(option.id)}
                 >
-                  <span className={cn("size-2.5 rounded-full", option.previewClass)} />
-                  {option.label}
-                  {accent === option.id ? <Check className="ml-auto size-3.5" /> : null}
-                </Button>
+                  <span
+                    className={cn(
+                      "size-7 rounded-full shadow-[0_0_0_1px_hsl(var(--background))]",
+                      option.previewClass,
+                      option.glowClass
+                    )}
+                  />
+                  {accent === option.id ? (
+                    <span className="absolute -right-1.5 -top-1.5 inline-flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                      <Check className="size-3.5" />
+                    </span>
+                  ) : null}
+                </button>
               ))}
             </div>
           </section>
 
-          <Separator />
-
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold">Corner style</h3>
+          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+            <h3 className="text-sm font-semibold tracking-tight">Corner style</h3>
             <div className="grid grid-cols-3 gap-2">
               {RADIUS_OPTIONS.map((option) => (
                 <Button
@@ -255,9 +268,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
             </div>
           </section>
 
-          <Separator />
-
-          <section className="space-y-2">
+          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
             <h3 className="flex items-center gap-2 text-sm font-semibold">
               <Type className="size-4 text-muted-foreground" />
               Text scale
@@ -277,9 +288,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
             </div>
           </section>
 
-          <Separator />
-
-          <section className="space-y-2">
+          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
             <h3 className="flex items-center gap-2 text-sm font-semibold">
               <Zap className="size-4 text-muted-foreground" />
               Motion
@@ -304,9 +313,9 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
             </div>
           </section>
 
-          <div className="rounded-lg border bg-card p-3">
+          <div className="rounded-xl border bg-card/70 p-4 shadow-sm">
             <p className="mb-2 text-xs text-muted-foreground">Preview</p>
-            <div className="space-y-2 rounded-md border bg-background p-3">
+            <div className="space-y-2 rounded-lg border bg-background p-3">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium">Sample card</p>
                 <Palette className="size-4 text-muted-foreground" />
@@ -323,7 +332,12 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
             </div>
           </div>
 
-          <Button type="button" variant="outline" className="w-full" onClick={resetThemePreferences}>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 w-full rounded-xl border-dashed"
+            onClick={resetThemePreferences}
+          >
             <Sparkles className="size-4" />
             Reset to recommended defaults
           </Button>

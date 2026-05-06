@@ -20,11 +20,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 
+export const REQUEST_SORT_OPTIONS = ["newest", "oldest", "amount-desc", "amount-asc"] as const
+export type RequestSort = (typeof REQUEST_SORT_OPTIONS)[number]
+const requestSortOptionSet = new Set<RequestSort>(REQUEST_SORT_OPTIONS)
+
+export function isRequestSort(value: string): value is RequestSort {
+  return requestSortOptionSet.has(value as RequestSort)
+}
+
 type RequestsFiltersProps = {
   search: string
   onSearchChange: (value: string) => void
-  sort: string
-  onSortChange: (value: string) => void
+  sort: RequestSort
+  onSortChange: (value: RequestSort) => void
 }
 
 export function RequestsFilters({
@@ -42,13 +50,20 @@ export function RequestsFilters({
           placeholder="Search"
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          className="h-9 pl-9"
+          className="pl-9"
         />
       </div>
 
       <div className="flex items-center gap-2">
-        <Select value={sort} onValueChange={onSortChange}>
-          <SelectTrigger size="default" className="h-9 min-w-[130px] justify-between">
+        <Select
+          value={sort}
+          onValueChange={(value) => {
+            if (isRequestSort(value)) {
+              onSortChange(value)
+            }
+          }}
+        >
+          <SelectTrigger size="default" className="min-w-[130px] justify-between">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent align="end">
@@ -61,7 +76,7 @@ export function RequestsFilters({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="lg" className="h-9">
+            <Button variant="outline">
               Filter
             </Button>
           </DropdownMenuTrigger>

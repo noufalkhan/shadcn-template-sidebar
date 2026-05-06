@@ -38,39 +38,56 @@ function getCrumbsFor(pathname: string): Crumb[] {
 export function DocumentsAppHeader() {
   const pathname = usePathname()
   const crumbs = getCrumbsFor(pathname)
+  const breadcrumbText = crumbs.map((crumb) => crumb.label).join(" / ")
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-3 border-b bg-background px-4 md:px-6">
-      <SidebarTrigger className="shrink-0" />
+    <header className="border-b bg-background">
+      <div className="mx-auto w-full max-w-[1400px] px-6 md:px-8">
+        <div className="flex h-14 items-center gap-2 xl:hidden">
+          <SidebarTrigger className="shrink-0" />
+          <p className="min-w-0 truncate text-sm font-medium text-foreground">{breadcrumbText}</p>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Button
+              size="icon-sm"
+              className="primary-button rounded-full"
+              aria-label="Upload your Document"
+            >
+              <Upload className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className="text-muted-foreground"
+              aria-label="Notifications"
+            >
+              <Bell className="size-4" />
+            </Button>
+            <ThemeManager
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-muted-foreground"
+                  aria-label="Theme settings"
+                >
+                  <Cog className="size-4" />
+                </Button>
+              }
+            />
+            <button
+              type="button"
+              className="flex items-center rounded-full border border-transparent p-1 text-left transition-colors hover:bg-muted/50"
+              aria-label="Account menu"
+            >
+              <Avatar size="sm">
+                <AvatarImage src="" alt="User avatar" />
+                <AvatarFallback>AM</AvatarFallback>
+              </Avatar>
+            </button>
+          </div>
+        </div>
 
-      <Breadcrumb className="hidden md:block">
-        <BreadcrumbList className="text-sm">
-          {crumbs.map((crumb, idx) => {
-            const isLast = idx === crumbs.length - 1
-            return (
-              <React.Fragment key={`${crumb.label}-${idx}`}>
-                <BreadcrumbItem>
-                  {isLast || !crumb.href ? (
-                    <BreadcrumbPage className="font-medium text-foreground">
-                      {crumb.label}
-                    </BreadcrumbPage>
-                  ) : (
-                    <BreadcrumbLink asChild>
-                      <Link href={crumb.href} className="text-muted-foreground">
-                        {crumb.label}
-                      </Link>
-                    </BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-                {!isLast ? <BreadcrumbSeparator /> : null}
-              </React.Fragment>
-            )
-          })}
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="ml-auto flex flex-1 items-center justify-end gap-2 md:ml-6 md:justify-start">
-        <div className="relative hidden w-full max-w-md md:block">
+        <div className="relative pb-3 xl:hidden">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
@@ -78,50 +95,90 @@ export function DocumentsAppHeader() {
             className="h-9 rounded-full bg-muted/50 pl-9"
           />
         </div>
-      </div>
 
-      <div className="flex items-center gap-2">
-        <Button size="lg" className="primary-button hidden rounded-full sm:inline-flex">
-          <Upload className="size-4" data-icon="inline-start" />
-          Upload your Document
-        </Button>
+        <div className="hidden h-16 grid-cols-[1fr_minmax(320px,480px)_1fr] items-center gap-4 xl:grid">
+          <div className="flex min-w-0 items-center gap-3">
+            <SidebarTrigger className="shrink-0" />
+            <Breadcrumb className="min-w-0">
+              <BreadcrumbList className="flex-nowrap overflow-hidden text-sm whitespace-nowrap">
+                {crumbs.map((crumb, idx) => {
+                  const isLast = idx === crumbs.length - 1
+                  return (
+                    <React.Fragment key={`${crumb.label}-${idx}`}>
+                      <BreadcrumbItem className="min-w-0">
+                        {isLast || !crumb.href ? (
+                          <BreadcrumbPage className="truncate font-medium text-foreground">
+                            {crumb.label}
+                          </BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink asChild>
+                            <Link href={crumb.href} className="truncate text-muted-foreground">
+                              {crumb.label}
+                            </Link>
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!isLast ? <BreadcrumbSeparator /> : null}
+                    </React.Fragment>
+                  )
+                })}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
 
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className="text-muted-foreground"
-          aria-label="Notifications"
-        >
-          <Bell className="size-4" />
-        </Button>
+          <div className="relative w-full">
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search"
+              className="h-9 rounded-full bg-muted/50 pl-9"
+            />
+          </div>
 
-        <ThemeManager
-          trigger={
+          <div className="flex items-center justify-end gap-2">
+            <Button size="lg" className="primary-button rounded-full">
+            <Upload className="size-4" data-icon="inline-start" />
+            Upload your Document
+            </Button>
+
             <Button
               variant="ghost"
               size="icon-sm"
               className="text-muted-foreground"
-              aria-label="Theme settings"
+              aria-label="Notifications"
             >
-              <Cog className="size-4" />
+              <Bell className="size-4" />
             </Button>
-          }
-        />
 
-        <button
-          type="button"
-          className="ml-1 flex items-center gap-2 rounded-full border border-transparent px-1.5 py-1 text-left transition-colors hover:bg-muted/50"
-        >
-          <Avatar size="sm">
-            <AvatarImage src="" alt="User avatar" />
-            <AvatarFallback>AM</AvatarFallback>
-          </Avatar>
-          <div className="hidden text-xs leading-tight md:block">
-            <p className="font-medium text-foreground">Aarav Mehta</p>
-            <p className="text-muted-foreground">aaravmehta.1990@gmail.com</p>
+            <ThemeManager
+              trigger={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-muted-foreground"
+                  aria-label="Theme settings"
+                >
+                  <Cog className="size-4" />
+                </Button>
+              }
+            />
+
+            <button
+              type="button"
+              className="ml-1 flex items-center gap-2 rounded-full border border-transparent px-1.5 py-1 text-left transition-colors hover:bg-muted/50"
+            >
+              <Avatar size="sm">
+                <AvatarImage src="" alt="User avatar" />
+                <AvatarFallback>AM</AvatarFallback>
+              </Avatar>
+              <div className="text-xs leading-tight">
+                <p className="font-medium text-foreground">Aarav Mehta</p>
+                <p className="text-muted-foreground">aaravmehta.1990@gmail.com</p>
+              </div>
+              <ChevronDown className="size-3.5 text-muted-foreground" />
+            </button>
           </div>
-          <ChevronDown className="hidden size-3.5 text-muted-foreground md:block" />
-        </button>
+        </div>
       </div>
     </header>
   )

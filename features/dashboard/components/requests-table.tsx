@@ -2,14 +2,21 @@
 
 import * as React from "react"
 
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { useRequests } from "@/features/dashboard/hooks/use-requests"
 import { RequestRow } from "@/features/dashboard/components/request-row"
-import { RequestsFilters } from "@/features/dashboard/components/requests-filters"
+import { RequestSort, RequestsFilters } from "@/features/dashboard/components/requests-filters"
 
 export function RequestsTable() {
   const { data: requests } = useRequests()
   const [search, setSearch] = React.useState("")
-  const [sort, setSort] = React.useState("newest")
+  const [sort, setSort] = React.useState<RequestSort>("newest")
 
   const filtered = React.useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -37,7 +44,7 @@ export function RequestsTable() {
 
   return (
     <section className="space-y-4">
-      <div className="overflow-hidden rounded-xl border bg-background">
+      <div className="overflow-hidden rounded-xl bg-background">
         <div className="border-b px-3 py-3 sm:px-4">
           <RequestsFilters
             search={search}
@@ -51,11 +58,37 @@ export function RequestsTable() {
             No requests found.
           </div>
         ) : (
-          <div className="divide-y">
-            {filtered.map((request) => (
-              <RequestRow key={request.id} request={request} />
-            ))}
-          </div>
+          <Table className="min-w-[980px]">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="h-8 px-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Request
+                </TableHead>
+                <TableHead className="h-8 px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Documents
+                </TableHead>
+                <TableHead className="h-8 px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Signers
+                </TableHead>
+                <TableHead className="h-8 px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Stamp
+                </TableHead>
+                <TableHead className="h-8 px-3 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Status
+                </TableHead>
+                <TableHead className="h-8 px-2 text-right text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((request) => (
+                <TableRow key={request.id} className="hover:bg-muted/20">
+                  <RequestRow request={request} />
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
       </div>
     </section>

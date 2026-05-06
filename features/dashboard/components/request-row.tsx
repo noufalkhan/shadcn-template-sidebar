@@ -61,63 +61,58 @@ export function RequestRow({ request }: RequestRowProps) {
   const overflow = Math.max(request.signers.length - visibleSigners.length, 0)
 
   return (
-    <div className="grid grid-cols-12 items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30">
-      <div className="col-span-12 flex items-start gap-3 md:col-span-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold tracking-tight">{request.id}</p>
-            <Badge className={cn("text-xs", CHANNEL_BADGE[request.channel])}>
-              {request.channel}
-            </Badge>
-          </div>
-          <p className="mt-0.5 text-xs text-muted-foreground">{request.dateTime}</p>
+    <>
+      <td className="w-[22%] py-3 pr-3 pl-2 align-middle">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold tracking-tight">{request.id}</p>
+          <Badge className={cn("text-[10px]", CHANNEL_BADGE[request.channel])}>
+            {request.channel}
+          </Badge>
         </div>
-      </div>
+        <p className="mt-1 text-xs text-muted-foreground">{request.dateTime}</p>
+      </td>
 
-      <div className="col-span-6 flex items-center gap-2 md:col-span-1">
-        <FileText className="size-4 text-muted-foreground" aria-hidden />
-        <div className="leading-tight">
-          <p className="text-xs text-muted-foreground">Documents</p>
-          <p className="text-sm font-medium tabular-nums">
+      <td className="relative w-[12%] px-3 py-3 align-middle before:absolute before:top-3 before:bottom-3 before:left-0 before:w-px before:bg-border/80 before:content-['']">
+        <p className="text-[11px] text-muted-foreground">Documents</p>
+        <div className="mt-1 flex items-center gap-1.5">
+          <FileText className="size-4 text-emerald-600" aria-hidden />
+          <p className="text-xl leading-none font-medium tabular-nums">
             {String(request.documentsCount).padStart(2, "0")}
           </p>
         </div>
-      </div>
+      </td>
 
-      <div className="col-span-6 flex items-center gap-3 md:col-span-2">
-        <div className="leading-tight">
-          <p className="text-xs text-muted-foreground">Signers</p>
-          <div className="mt-0.5 flex items-center gap-2">
-            <AvatarGroup className="-space-x-1.5">
-              {visibleSigners.map((signer, idx) => (
-                <Avatar
-                  key={signer.initials + idx}
-                  size="sm"
-                  className="ring-2 ring-background"
+      <td className="relative w-[20%] px-3 py-3 align-middle before:absolute before:top-3 before:bottom-3 before:left-0 before:w-px before:bg-border/80 before:content-['']">
+        <p className="text-[11px] text-muted-foreground">Signers</p>
+        <div className="mt-1 flex items-center gap-2">
+          <AvatarGroup className="-space-x-1.5">
+            {visibleSigners.map((signer, idx) => (
+              <Avatar
+                key={`${signer.name}-${signer.initials}-${idx}`}
+                size="sm"
+                className="ring-2 ring-background"
+              >
+                <AvatarFallback
+                  className={cn(
+                    "text-[10px] font-semibold",
+                    SIGNER_TINTS[idx % SIGNER_TINTS.length]
+                  )}
                 >
-                  <AvatarFallback
-                    className={cn(
-                      "text-xs font-semibold",
-                      SIGNER_TINTS[idx % SIGNER_TINTS.length]
-                    )}
-                  >
-                    {signer.initials}
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-            </AvatarGroup>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Users className="size-3" />
-              {request.signers.length} signers
-              {overflow > 0 ? ` (+${overflow})` : null}
-            </span>
-          </div>
+                  {signer.initials}
+                </AvatarFallback>
+              </Avatar>
+            ))}
+          </AvatarGroup>
+          <span className="text-xs text-muted-foreground">
+            {request.signers.length} signers
+            {overflow > 0 ? ` (+${overflow})` : null}
+          </span>
         </div>
-      </div>
+      </td>
 
-      <div className="col-span-6 leading-tight md:col-span-2">
+      <td className="relative w-[18%] px-3 py-3 align-middle before:absolute before:top-3 before:bottom-3 before:left-0 before:w-px before:bg-border/80 before:content-['']">
         <div className="flex items-center gap-2">
-          <p className="text-xs text-muted-foreground">Stamp Details</p>
+          <p className="text-[11px] text-muted-foreground">Stamp Details</p>
           <span
             className={cn(
               "inline-flex h-4 min-w-6 items-center justify-center rounded-sm px-1 text-xs font-semibold",
@@ -127,8 +122,8 @@ export function RequestRow({ request }: RequestRowProps) {
             {request.stampDetailsKey}
           </span>
         </div>
-        <div className="mt-0.5 flex items-center gap-2 text-sm">
-          <span className="font-medium tabular-nums">
+        <div className="mt-1 flex items-center gap-2">
+          <span className="text-lg leading-none font-semibold tabular-nums">
             {request.amount === null ? "--" : `₹${request.amount}`}
           </span>
           {request.amount !== null ? (
@@ -138,9 +133,9 @@ export function RequestRow({ request }: RequestRowProps) {
             </span>
           ) : null}
         </div>
-      </div>
+      </td>
 
-      <div className="col-span-10 leading-tight md:col-span-3">
+      <td className="relative w-[24%] px-3 py-3 align-middle before:absolute before:top-3 before:bottom-3 before:left-0 before:w-px before:bg-border/80 before:content-['']">
         <div className="flex items-center gap-2">
           <span
             className={cn("size-2 rounded-full", STATUS_DOT[request.status])}
@@ -148,18 +143,18 @@ export function RequestRow({ request }: RequestRowProps) {
           />
           <p className="text-sm font-medium">{STATUS_LABEL[request.status]}</p>
         </div>
-        <p className="mt-0.5 text-xs text-muted-foreground">
+        <p className="mt-1 text-xs text-muted-foreground">
           {request.lastActionLabel} <span aria-hidden>·</span> {request.lastActionAgo}
         </p>
-      </div>
+      </td>
 
-      <div className="col-span-2 flex justify-end md:col-span-1">
+      <td className="relative w-[4%] py-3 pr-2 pl-3 align-middle text-right before:absolute before:top-3 before:bottom-3 before:left-0 before:w-px before:bg-border/80 before:content-['']">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon-sm"
-              className="text-muted-foreground"
+              className="h-8 w-8 text-muted-foreground"
               aria-label="Request actions"
             >
               <MoreVertical className="size-4" />
@@ -172,7 +167,7 @@ export function RequestRow({ request }: RequestRowProps) {
             <DropdownMenuItem variant="destructive">Cancel</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-    </div>
+      </td>
+    </>
   )
 }

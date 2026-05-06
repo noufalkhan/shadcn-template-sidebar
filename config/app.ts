@@ -1,5 +1,5 @@
 export const appConfig = {
   name: " Multi-Layout Template",
-  productName: "App Name",
+  productName: "Ospyn Neo",
   primaryCtaLabel: "Gradient Button",
 } as const
