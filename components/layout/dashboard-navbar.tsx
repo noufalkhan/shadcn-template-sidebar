@@ -2,11 +2,10 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { appConfig } from "@/config/app"
-import { getHeaderNavItems } from "@/config/nav/resolver"
-import { isNavItemActive } from "@/lib/navigation"
+import { Bell, Cog, Menu, User } from "lucide-react"
+
+import { ThemeManager } from "@/components/theme-manager"
 import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
   Sheet,
   SheetClose,
@@ -15,8 +14,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { ThemeManager } from "@/components/theme-manager"
-import { Bell, Cog, Menu, User } from "lucide-react"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { appConfig } from "@/config/app"
+import { getHeaderNavItems } from "@/config/nav/resolver"
+import { isNavItemActive } from "@/lib/navigation"
 
 type DashboardNavbarProps = {
   showSidebarTrigger?: boolean

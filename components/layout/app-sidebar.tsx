@@ -3,9 +3,11 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { ChevronUp, User2 } from "lucide-react"
+
 import { appConfig } from "@/config/app"
 import { getSidebarNavItems } from "@/config/nav/resolver"
-import { isNavItemActive } from "@/lib/navigation"
+import { Separator } from "@/components/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -19,14 +21,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import { ChevronUp, User2 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { isNavItemActive } from "@/lib/navigation"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()

@@ -1,5 +1,5 @@
 import { HeaderLayout } from "@/components/layout/header-layout"
-import { DashboardNavbar } from "@/features/dashboard/components/dashboard-navbar"
+import { DashboardNavbar } from "@/components/layout/dashboard-navbar"
 
 export default function WithHeaderLayoutGroup({
   children,

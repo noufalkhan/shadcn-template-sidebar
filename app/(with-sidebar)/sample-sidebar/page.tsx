@@ -1,10 +1,5 @@
-import { SectionPage } from "@/features/dashboard/components/section-page"
+import { DashboardPage } from "@/features/dashboard/components/dashboard-page"
 
 export default function SampleSidebarPage() {
-  return (
-    <SectionPage
-      title="Sidebar Dashboard"
-      description="This section stays in with-sidebar mode with sidebar and header enabled."
-    />
-  )
+  return <DashboardPage />
 }

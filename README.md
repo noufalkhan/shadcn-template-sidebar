@@ -82,7 +82,7 @@ Update these values once per project to rebrand the template quickly.
 Example:
 
 ```tsx
-import { SectionPage } from "@/features/dashboard/components/section-page"
+import { SectionPage } from "@/components/common/section-page"
 
 export default function BillingPage() {
   return <SectionPage title="Billing" description="Manage billing and invoices." />

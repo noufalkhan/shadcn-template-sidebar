@@ -1,4 +1,4 @@
-import { SectionPage } from "@/features/dashboard/components/section-page"
+import { SectionPage } from "@/components/common/section-page"
 
 export default function DocumentsPage() {
   return (
