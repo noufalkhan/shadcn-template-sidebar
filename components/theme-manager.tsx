@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   Check,
+  CircleDot,
   Monitor,
   Moon,
   Palette,
@@ -12,6 +13,7 @@ import {
   Type,
   Zap,
 } from "lucide-react"
+import { motion as MotionElement } from "framer-motion"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,7 +28,7 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 type ThemeMode = "light" | "dark" | "semi-dark" | "system"
-type Accent = "slate" | "emerald" | "blue" | "violet" | "rose" | "amber"
+type Accent = "slate" | "emerald" | "navy" | "amethyst" | "teal" | "zinc"
 type Radius = "default" | "comfortable" | "compact"
 type Motion = "default" | "reduced"
 type Scale = "sm" | "md" | "lg"
@@ -41,10 +43,10 @@ const STORAGE_KEYS = {
 const ACCENT_OPTIONS: Array<{ id: Accent; previewClass: string; glowClass: string }> = [
   { id: "slate", previewClass: "bg-slate-500", glowClass: "shadow-slate-500/50" },
   { id: "emerald", previewClass: "bg-emerald-500", glowClass: "shadow-emerald-500/50" },
-  { id: "blue", previewClass: "bg-blue-500", glowClass: "shadow-blue-500/50" },
-  { id: "violet", previewClass: "bg-violet-500", glowClass: "shadow-violet-500/50" },
-  { id: "rose", previewClass: "bg-rose-500", glowClass: "shadow-rose-500/50" },
-  { id: "amber", previewClass: "bg-amber-500", glowClass: "shadow-amber-500/50" },
+  { id: "navy", previewClass: "bg-blue-700", glowClass: "shadow-blue-700/50" },
+  { id: "amethyst", previewClass: "bg-purple-500", glowClass: "shadow-purple-500/50" },
+  { id: "teal", previewClass: "bg-cyan-500", glowClass: "shadow-cyan-500/50" },
+  { id: "zinc", previewClass: "bg-zinc-500", glowClass: "shadow-zinc-500/50" },
 ]
 
 const RADIUS_OPTIONS: Array<{ id: Radius; label: string }> = [
@@ -57,6 +59,37 @@ const SCALE_OPTIONS: Array<{ id: Scale; label: string; preview: string }> = [
   { id: "sm", label: "Small", preview: "90%" },
   { id: "md", label: "Default", preview: "100%" },
   { id: "lg", label: "Large", preview: "110%" },
+]
+
+const MODE_OPTIONS = [
+  {
+    id: "light" as const,
+    label: "Light",
+    description: "Clean daytime canvas",
+    icon: Sun,
+    iconClass: "text-amber-500",
+  },
+  {
+    id: "dark" as const,
+    label: "Dark",
+    description: "Focused low-glare mode",
+    icon: Moon,
+    iconClass: "text-indigo-400",
+  },
+  {
+    id: "semi-dark" as const,
+    label: "Semi dark",
+    description: "Light content, dark sidebar",
+    icon: CircleDot,
+    iconClass: "text-violet-400",
+  },
+  {
+    id: "system" as const,
+    label: "System",
+    description: "Follow device setting",
+    icon: Monitor,
+    iconClass: "text-sky-400",
+  },
 ]
 
 function readStoredValue<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
@@ -153,7 +186,10 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
   return (
     <Sheet>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent side="right" className="overflow-y-auto sm:max-w-md">
+      <SheetContent
+        side="right"
+        className="overflow-y-auto bg-linear-to-b from-background to-muted/30 sm:max-w-md"
+      >
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Settings2 className="size-4" />
@@ -165,169 +201,225 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
         </SheetHeader>
 
         <div className="flex-1 space-y-4 px-4 pb-4 pt-3">
-          <div className="grid grid-cols-2 gap-3 rounded-xl border bg-linear-to-b from-card to-card/40 p-4 shadow-sm">
-            <div className="rounded-lg bg-background/70 p-3">
-              <p className="text-xs text-muted-foreground">Current mode</p>
-              <p className="font-medium capitalize">{currentModeLabel}</p>
-            </div>
-            <div className="rounded-lg bg-background/70 p-3">
-              <p className="text-xs text-muted-foreground">Active accent</p>
-              <p className="font-medium capitalize">{accent}</p>
-            </div>
+          <div className="flex items-center justify-between rounded-xl border bg-card/70 px-3 py-2.5 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="size-1.5 rounded-full bg-primary" />
+              <span className="capitalize">{currentModeLabel}</span>
+            </span>
+            <span className="h-3.5 w-px bg-border" />
+            <span className="capitalize">{accent}</span>
           </div>
 
-          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+          <section className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
             <h3 className="text-sm font-semibold tracking-tight">Appearance mode</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant={activeTheme === "light" ? "default" : "outline"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setTheme("light")}
-              >
-                <Sun className="size-4" />
-                Light
-              </Button>
-              <Button
-                variant={activeTheme === "dark" ? "default" : "outline"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setTheme("dark")}
-              >
-                <Moon className="size-4" />
-                Dark
-              </Button>
-              <Button
-                variant={activeTheme === "system" ? "default" : "outline"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setTheme("system")}
-              >
-                <Monitor className="size-4" />
-                System
-              </Button>
-              <Button
-                variant={activeTheme === "semi-dark" ? "default" : "outline"}
-                size="sm"
-                className="justify-start"
-                onClick={() => setTheme("semi-dark")}
-              >
-                <Moon className="size-4" />
-                Semi dark
-              </Button>
+            <div className="rounded-xl border bg-background/70 p-1.5">
+              <div className="grid grid-cols-2 gap-1.5">
+                {MODE_OPTIONS.map((option) => {
+                  const isActive = activeTheme === option.id
+                  const Icon = option.icon
+
+                  return (
+                    <MotionElement.button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setTheme(option.id)}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 360, damping: 26 }}
+                      className={cn(
+                        "relative min-h-20 overflow-hidden rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                        isActive
+                          ? "border-primary/35 bg-card shadow-sm"
+                          : "border-transparent bg-transparent hover:border-border/70 hover:bg-muted/50"
+                      )}
+                    >
+                      {isActive ? (
+                        <MotionElement.span
+                          layoutId="active-theme-pill"
+                          className="absolute inset-0 rounded-lg bg-linear-to-br from-primary/10 via-primary/5 to-transparent"
+                          transition={{ type: "spring", stiffness: 340, damping: 28 }}
+                        />
+                      ) : null}
+                      <span className="relative z-10 flex items-start justify-between gap-2">
+                        <span className="space-y-1">
+                          <span className="flex items-center gap-2 text-sm font-medium">
+                            <span
+                              className={cn(
+                                "inline-flex size-6 items-center justify-center rounded-md bg-background shadow-xs",
+                                option.iconClass
+                              )}
+                            >
+                              <Icon className="size-3.5" />
+                            </span>
+                            {option.label}
+                          </span>
+                          <span className="block text-[11px] leading-relaxed text-muted-foreground">
+                            {option.description}
+                          </span>
+                        </span>
+                        {isActive ? (
+                          <MotionElement.span
+                            initial={{ scale: 0.7, opacity: 0.35 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.18, ease: "easeOut" }}
+                            className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm"
+                          >
+                            <Check className="size-3.5" />
+                          </MotionElement.span>
+                        ) : null}
+                      </span>
+                    </MotionElement.button>
+                  )
+                })}
+              </div>
             </div>
           </section>
 
-          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+          <section className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
             <h3 className="text-sm font-semibold tracking-tight">Accent palette</h3>
-            <div className="grid grid-cols-6 gap-3">
+            <div className="grid grid-cols-6 gap-2">
               {ACCENT_OPTIONS.map((option) => (
-                <button
+                <MotionElement.button
                   key={option.id}
                   type="button"
                   aria-label={`Use ${option.id} accent`}
+                  whileTap={{ scale: 0.97 }}
                   className={cn(
-                    "relative flex size-11 items-center justify-center rounded-full border bg-background transition-all hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                    "group relative flex h-12 w-full items-center justify-center rounded-xl border bg-background/85 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     accent === option.id
-                      ? "border-foreground/20 shadow-md ring-2 ring-ring ring-offset-2"
-                      : "border-border"
+                      ? "border-primary/40 shadow-sm ring-2 ring-primary/25"
+                      : "border-border hover:border-border/80 hover:bg-muted/40"
                   )}
                   onClick={() => onAccentChange(option.id)}
                 >
                   <span
                     className={cn(
-                      "size-7 rounded-full shadow-[0_0_0_1px_hsl(var(--background))]",
+                      "size-6 rounded-full shadow-[0_0_0_1px_hsl(var(--background))] transition-transform group-hover:scale-105",
                       option.previewClass,
                       option.glowClass
                     )}
                   />
                   {accent === option.id ? (
-                    <span className="absolute -right-1.5 -top-1.5 inline-flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                      <Check className="size-3.5" />
-                    </span>
+                    <MotionElement.span
+                      initial={{ scale: 0.7, opacity: 0.3 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="absolute -right-1 -top-1 inline-flex size-4.5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm"
+                    >
+                      <Check className="size-3" />
+                    </MotionElement.span>
                   ) : null}
-                </button>
+                  <span className="pointer-events-none absolute -bottom-7 left-1/2 z-20 hidden -translate-x-1/2 rounded-md border bg-popover px-2 py-1 text-[10px] font-medium capitalize text-popover-foreground shadow-md group-hover:block">
+                    {option.id}
+                  </span>
+                </MotionElement.button>
               ))}
             </div>
           </section>
 
-          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+          <section className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
             <h3 className="text-sm font-semibold tracking-tight">Corner style</h3>
             <div className="grid grid-cols-3 gap-2">
               {RADIUS_OPTIONS.map((option) => (
-                <Button
+                <MotionElement.button
                   key={option.id}
                   type="button"
-                  variant={radius === option.id ? "default" : "outline"}
-                  size="sm"
                   onClick={() => onRadiusChange(option.id)}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                    radius === option.id
+                      ? "border-primary/40 bg-primary/10 text-foreground"
+                      : "border-border bg-background/70 text-muted-foreground hover:bg-muted/40"
+                  )}
                 >
                   {option.label}
-                </Button>
+                </MotionElement.button>
               ))}
             </div>
           </section>
 
-          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+          <section className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
             <h3 className="flex items-center gap-2 text-sm font-semibold">
               <Type className="size-4 text-muted-foreground" />
               Text scale
             </h3>
             <div className="grid grid-cols-3 gap-2">
               {SCALE_OPTIONS.map((option) => (
-                <Button
+                <MotionElement.button
                   key={option.id}
                   type="button"
-                  variant={scale === option.id ? "default" : "outline"}
-                  size="sm"
                   onClick={() => onScaleChange(option.id)}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                    scale === option.id
+                      ? "border-primary/40 bg-primary/10 text-foreground"
+                      : "border-border bg-background/70 text-muted-foreground hover:bg-muted/40"
+                  )}
                 >
                   {option.preview}
-                </Button>
+                </MotionElement.button>
               ))}
             </div>
           </section>
 
-          <section className="space-y-3 rounded-xl border bg-card/70 p-4 shadow-sm">
+          <section className="space-y-3 rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
             <h3 className="flex items-center gap-2 text-sm font-semibold">
               <Zap className="size-4 text-muted-foreground" />
               Motion
             </h3>
             <div className="grid grid-cols-2 gap-2">
-              <Button
+              <MotionElement.button
                 type="button"
-                variant={motion === "default" ? "default" : "outline"}
-                size="sm"
                 onClick={() => onMotionChange("default")}
+                whileTap={{ scale: 0.98 }}
+                className={cn(
+                  "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                  motion === "default"
+                    ? "border-primary/40 bg-primary/10 text-foreground"
+                    : "border-border bg-background/70 text-muted-foreground hover:bg-muted/40"
+                )}
               >
                 Smooth
-              </Button>
-              <Button
+              </MotionElement.button>
+              <MotionElement.button
                 type="button"
-                variant={motion === "reduced" ? "default" : "outline"}
-                size="sm"
                 onClick={() => onMotionChange("reduced")}
+                whileTap={{ scale: 0.98 }}
+                className={cn(
+                  "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                  motion === "reduced"
+                    ? "border-primary/40 bg-primary/10 text-foreground"
+                    : "border-border bg-background/70 text-muted-foreground hover:bg-muted/40"
+                )}
               >
                 Reduced
-              </Button>
+              </MotionElement.button>
             </div>
           </section>
 
-          <div className="rounded-xl border bg-card/70 p-4 shadow-sm">
-            <p className="mb-2 text-xs text-muted-foreground">Preview</p>
-            <div className="space-y-2 rounded-lg border bg-background p-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Sample card</p>
-                <Palette className="size-4 text-muted-foreground" />
+          <div className="rounded-2xl border bg-card/80 p-4 shadow-sm backdrop-blur">
+            <p className="mb-2 text-xs text-muted-foreground">Live preview</p>
+            <div className="space-y-3 rounded-xl border bg-background p-3">
+              <div className="flex items-center justify-between rounded-lg bg-muted/40 px-2.5 py-2">
+                <p className="text-sm font-medium">Workspace sample</p>
+                <span className="inline-flex items-center gap-1 rounded-full border bg-background px-2 py-1 text-[10px] font-medium text-muted-foreground">
+                  <Palette className="size-3" />
+                  {accent}
+                </span>
               </div>
               <p className="text-xs text-muted-foreground">
-                Accent, spacing, text scale, and motion update live.
+                Accent, radius, text scale, and animation preferences update instantly.
               </p>
-              <div className="flex items-center gap-2">
-                <Button size="sm">Primary action</Button>
+              <div className="flex items-center justify-between gap-2">
+                <Button size="sm" className="rounded-full">
+                  Primary action
+                </Button>
                 <Button size="sm" variant="outline">
                   Secondary
                 </Button>
+                <span className="rounded-md bg-muted px-2 py-1 text-[10px] font-medium uppercase text-muted-foreground">
+                  {motion === "default" ? "smooth" : "reduced"}
+                </span>
               </div>
             </div>
           </div>
@@ -335,7 +427,7 @@ export function ThemeManager({ trigger }: { trigger: React.ReactNode }) {
           <Button
             type="button"
             variant="outline"
-            className="h-10 w-full rounded-xl border-dashed"
+            className="h-10 w-full rounded-xl border-dashed bg-background/70"
             onClick={resetThemePreferences}
           >
             <Sparkles className="size-4" />

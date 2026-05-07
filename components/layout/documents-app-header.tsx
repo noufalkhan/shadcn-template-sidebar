@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Bell, ChevronDown, Cog, Search, Upload } from "lucide-react"
 
@@ -40,13 +41,11 @@ export function DocumentsAppHeader() {
           <SidebarTrigger className="shrink-0" />
           <p className="min-w-0 truncate text-sm font-medium text-foreground">{breadcrumbText}</p>
           <div className="ml-auto flex items-center gap-1.5">
-            <Button
-              size="sm"
-              className="primary-button rounded-full"
-              aria-label="Upload your Document"
-            >
-              <Upload className="size-4" />
-              Upload your Document
+            <Button asChild size="sm" className="primary-button rounded-full">
+              <Link href="/document-upload" aria-label="Upload your Document">
+                <Upload className="size-4" />
+                Upload your Document
+              </Link>
             </Button>
             <Button
               variant="ghost"
@@ -107,15 +106,23 @@ export function DocumentsAppHeader() {
 
           <div className="flex items-center justify-end gap-1.5 pl-2 lg:gap-2 lg:pl-3">
             <Button
+              asChild
               size="icon-sm"
               className="primary-button rounded-full xl:hidden"
-              aria-label="Upload your Document"
             >
-              <Upload className="size-4" />
+              <Link href="/document-upload" aria-label="Upload your Document">
+                <Upload className="size-4" />
+              </Link>
             </Button>
-            <Button size="lg" className="primary-button hidden rounded-full xl:inline-flex">
-              <Upload className="size-4" data-icon="inline-start" />
-              Upload your Document
+            <Button
+              asChild
+              size="lg"
+              className="primary-button hidden rounded-full xl:inline-flex"
+            >
+              <Link href="/document-upload" aria-label="Upload your Document">
+                <Upload className="size-4" data-icon="inline-start" />
+                Upload your Document
+              </Link>
             </Button>
 
             <Button
